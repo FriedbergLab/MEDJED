@@ -6,7 +6,6 @@
 #
 
 library(shiny)
-library(shinyjs)
 
 shinyUI(
   
