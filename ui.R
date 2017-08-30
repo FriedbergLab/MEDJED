@@ -11,6 +11,8 @@ shinyUI(
   
   #Creates the navbar set-up
   navbarPage(id = 'mainPage',
+             windowTitle = "MEDJED",
+             
              #Stylesheet
              theme = "ogtheme.css", 
              #theme = "C:/Users/cmmann/Downloads/iastate-theme-1.4.67/iastate-theme/css/base.css",
