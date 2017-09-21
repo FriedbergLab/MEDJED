@@ -69,7 +69,7 @@ shinyServer(function(input, output, session) {
     })
     
     output$predictionPercentage <- renderText({
-      paste0("MEDJED predicts ", format(round(prediction, 2), nsmall = 2), "% of deletion events for this target sequence will be due to MMEJ repair.")
+      paste0("MEDJED predicts ", format(round(prediction*100, 2), nsmall = 2), "% of deletion events for this target sequence will be due to MMEJ repair.")
     })
   }
   
@@ -78,7 +78,7 @@ shinyServer(function(input, output, session) {
     #Clear inputs/outputs
     reset()
     #Input an example into the text box
-    updateTextInput(session, "targetSeq", value = "GGAGGAAGGGCCTGAGTCCGAGCAGAAGAAGAAGGGCTCCCATCACATCAACCGGTGGCG")
+    updateTextInput(session, "targetSeq", value = "GAGGACAGGAAAACGGACGTAGCTGAACAGGTGCTAGTCGATGCTGATCG")
   })
   
   
