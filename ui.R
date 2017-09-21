@@ -87,8 +87,8 @@ shinyUI(
                                    "The cut site should occur in the exact center of the sequence.")),
 
                           p(paste0("Example:")),
-                          p("There are 25 bp upstream of the cut site (denoted by \"|\") and 25 bp downstream."),
-                          p(tags$div(HTML("GAGGACAGGAAAACGGACGTAGCTG<b>|</b>AAC<b>AGG</b>TGCTAGTCGATGCTGATCGT"))),
+                          p("There are 25 bp upstream of the cut site (denoted by a lightning bolt) and 25 bp downstream."),
+                          img(src = "helpImage.png", width = "100%"),
                           textAreaInput("targetSeq",
                                         label = "",
                                         value = "",
@@ -148,9 +148,12 @@ shinyUI(
                       
                       #Text area in center of page
                       column(9, wellPanel(
-                        p("Please contact us at MEDJEDHelp@gmail.com to report issues and request support."),
-                        p("A standalone version of this code may be downloaded at https://github.com/Dobbs-Lab/MEDJED. The R code is provided as-is. You are free to use it in non-commercial applications, provided you cite the authors. Please be aware that you modify the code at your own risk; we are unable to provide support for modified versions.")
-                      ))
+                        p("Please contact MEDJEDHelp@gmail.com to report issues and request support."),
+                        p("Before submitting a bug report, please read the instructions below on how to write a helpful bug report."),
+                        p("By following these instructions, we will be able to solve your issue more quickly.")),
+                        wellPanel(
+                          includeHTML("www/20170921_A_Guide_to_Writing_Helpful_Bug_Reports.html"))
+                      )
              ),
              
              ##########FUNDING Tab#############################################
