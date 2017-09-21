@@ -18,7 +18,7 @@ shinyUI(
              #theme = "C:/Users/cmmann/Downloads/iastate-theme-1.4.67/iastate-theme/css/base.css",
              
              #Page title box
-             tags$div("MEDJED v1.0.0", 
+             tags$div("MEDJED v1.0.1", 
                       style = "color:white"),
              
              
@@ -83,12 +83,12 @@ shinyUI(
                         #),
                         #conditionalPanel(
                         #  condition = "input.outcomeOp == 2",
-                          p(paste0("Input your target of interest.", 
-                                   "The cut site should occur in the exact center of the sequence.")),
-
-                          p(paste0("Example:")),
-                          p("There are 25 bp upstream of the cut site (denoted by a lightning bolt) and 25 bp downstream."),
+                          p(paste0("Input your target sequence of interest.", 
+                                   "Your sequence must have an even number of nucleotides, with the cut site occurring between the middle-most nucleotides.")),
+                          p("For example, the sequence below consists of 50 nucleotides, and the expected cut site (lightning bolt) occurs between bases 25 and 26."),
+                          
                           img(src = "helpImage.png", width = "100%"),
+                          p("Use the 'Example' link in the panel to the left to pre-populate the form with this example sequence."),
                           textAreaInput("targetSeq",
                                         label = "",
                                         value = "",
