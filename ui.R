@@ -19,7 +19,7 @@ shinyUI(
     #theme = "C:/Users/cmmann/Downloads/iastate-theme-1.4.67/iastate-theme/css/base.css",
     
     #Page title box
-    tags$div("MEDJED v1.0.1", 
+    tags$div("MEDJED v1.1.0", 
              style = "color:white"),
     
     
