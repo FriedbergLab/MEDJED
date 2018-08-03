@@ -1,10 +1,3 @@
-
-# This is the server logic for a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
-
 library(shiny)
 library(stringr)
 library(randomForest)
@@ -21,6 +14,13 @@ shinyServer(function(input, output, session) {
   #Check validity of input target sequence
   validTargetSeq <- reactive({
     if(!is.null(input$targetSeq)){
+      validate(
+        need(!str_detect(toupper(input$targetSeq), "[^ACGT]"), 
+             paste0("Error: Input target sequence contains non-standard nucleotides. ",
+                    "Allowed nucleotides are A, C, G, and T.")
+        )
+      )
+      
       if((nchar(input$targetSeq) %% 2) != 0){
         validate(
           need((nchar(input$targetSeq) %% 2) == 0,
@@ -29,19 +29,26 @@ shinyServer(function(input, output, session) {
                       " nucleotides in the pasted sequence. ",
                       "There must be an even number of nucleotides in the input sequence."))
         )
+        
       } else if(input$targetSeq == ""){
         validate(
           need(input$targetSeq != "", paste0(""))
         )
+        
       } else {
         validate(
-          need(!str_detect(toupper(input$targetSeq), "[^ACGT]"), 
-               paste0("Error: Input target sequence contains non-standard nucleotides. ",
-                      "Allowed nucleotides are A, C, G, and T.")
-          ))
+
+          need(nchar(input$targetSeq) <= 200,
+               paste0("Error: Please input 200 or less nucleotides of context. We recommend 50-80 bp.")
+            
+          ),
+          
+          need(nchar(input$targetSeq) >= 20,
+               paste0("Error: Not enough sequence context to perform calculations. Please input at least 20 nucleotides."))
+          
+          )
       }
     }
-    
   })
   
   output$validTargetSeq <- renderText({
@@ -49,10 +56,9 @@ shinyServer(function(input, output, session) {
   })
   
   ####FUNCTION CALLS: ####
-  
   observeEvent(input$submit, {
     if(is.null(validTargetSeq())){
-      delFrame <- findDeletions("inputSequence", input$targetSeq)
+      delFrame <- findDeletionsRevised("inputSequence", input$targetSeq)
       fv <- generateFeatureVector(delFrame)
     }
     
@@ -64,8 +70,8 @@ shinyServer(function(input, output, session) {
   ####Print Outputs: ####
   printPrediction <- function(prediction){
     
-    output$targetSequence <- renderText({
-      input$targetSeq
+    output$targetSequence <- renderUI({
+      HTML(paste("<p style = 'word-wrap: break-word;'>", input$targetSeq, "</p>"))
     })
     
     output$predictionPercentage <- renderText({
@@ -77,6 +83,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$example, {
     #Clear inputs/outputs
     reset()
+    
     #Input an example into the text box
     updateTextInput(session, "targetSeq", value = "GAGGACAGGAAAACGGACGTAGCTGAACAGGTGCTAGTCGATGCTGATCG")
   })
@@ -103,5 +110,4 @@ shinyServer(function(input, output, session) {
       ""
     })
   }
-
 })
