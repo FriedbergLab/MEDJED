@@ -40,12 +40,10 @@ shinyServer(function(input, output, session) {
 
           need(nchar(input$targetSeq) <= 200,
                paste0("Error: Please input 200 or less nucleotides of context. We recommend 50-80 bp.")
-            
           ),
           
           need(nchar(input$targetSeq) >= 20,
                paste0("Error: Not enough sequence context to perform calculations. Please input at least 20 nucleotides."))
-          
           )
       }
     }
@@ -87,7 +85,6 @@ shinyServer(function(input, output, session) {
     #Input an example into the text box
     updateTextInput(session, "targetSeq", value = "GAGGACAGGAAAACGGACGTAGCTGAACAGGTGCTAGTCGATGCTGATCG")
   })
-  
   
   ####Reset Functions: ####
   #Clear the form
