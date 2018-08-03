@@ -1,188 +1,214 @@
-#' findDeletions
-#'
-#' This function takes an identifier, sequence context, and single 
-#' stranded guide RNA sequence and returns a data frame containing
-#' potential MMEJ events
-#'
-#' @param seq   A sequence containing a DSB target and some surrounding context; cut must be in center of sequence
-#' @param sgRNA The CRISPR guide RNA target, minus the PAM sequence
-#' @param cutI  Gives the index of the beginning of the cutsite's downstream sequence in the event of an ambiguous PAM (i.e., "CCN" upstream AND "NGG" downstream of sgRNA match in seq)
+#' findDeletionsRevised
 #' 
-#' @return A data frame containing the unique potential MMEJ events
+#' @param seq         DNA sequence
+#' @param cutPosition Position to be cut in the DNA sequence
+#' @param weight      deletion length weight factor
+#'
+#' @return
+#' @export
 #'
 #' @examples
-#' findDeletions("GTGGCCGACGGGCTCATCACCACGCTCCATTATCCAGCCCCAAAGCGCAA", "TGGGGCTGGATAATGGAGCG", cutI = 26)
-#'
-#' @export
 
-# 
-
-findDeletions <- function(id, seq){
-  #Capitalize sequences to avoid case sensitive search issues
+findDeletionsRevised <- function(id, seq, weight = 20.0){
+  cutIndex <- nchar(seq) / 2
+  
+  # Define microhomology length to be used
+  mhL <- 2
+  
+  # Make sequence uppercase
   seq <- toupper(seq)
-  cutIndex <- nchar(seq)/2 + 1
   
-  #Create a data frame to hold information about predicted potential MMEJ events
-  #For instance, given sequence "GTGGCCGACGGGCTCATCACCACGCTCCATTATCCAGCCCCAAAGCGCAA":
-  #The first row of this frame (before sorting) will look like:
-  #
-  #This won't be here:GTGGCCGACGGGCTCATCACCACGCTCCATTATCCAGCCCCAAAGCGCAA     #Wildtype sequence for comparison
-  #deletedSeqContext: GTGGC---------------------------------CCCAAAGCGCAA     #Visualization of deletion pattern
-  #microhomology:        GC                                                  #The microhomology sequence (aligned to the sequence for comparison; actuall just char vector)
-  #startDel:       6                                                         #The index of the first "-" deletion
-  #endDel:         38                                                        #The index of the last "-" deletion
-  #mhStart1:       4                                                         #The index of the first character in the left hand mh arm
-  #mhEnd1:         5                                                         #The index of the last character in the left hand mh arm
-  #mhStart2:       37                                                        #The index of the first character in the right hand mh arm
-  #mhEnd2:         38                                                        #The index of the last character in the right hand mh arm
-  #deletedSeq:             CGACGGGCTCATCACCACGCTCCATTATCCAGC                 #The deleted sequence (aligned to sequence for comparison)
-  #delLength:      33                                                        #length of deletedSeq
-  #mhLength:       2                                                         #Length of microhomology
-  #GC:             1                                                         #GC content of microhomology; percentage from 0 to 1
-  #distToCut:      20                                                        #Distance from the last nucleotide before the deletion to the location of the ds cut
-  #outOfFrame:     0                                                         #Whether the deletion produces an out of frame mutation (0 = no, 1 = yes)
+  # Split the sequence into upstream and downstream of the cut site
+  upstream   <- substring(seq, 1,                    nchar(seq) / 2)
+  downstream <- substring(seq, (nchar(seq) / 2) + 1, nchar(seq))
   
-  delFrame <- data.frame(id                = as.character(),
-                         seq               = as.character(),
-                         deletedSeqContext = as.character(),
-                         microhomology     = as.character(), 
-                         startDel          = as.numeric(), 
-                         endDel            = as.numeric(), 
-                         mhStart1          = as.numeric(), 
-                         mhEnd1            = as.numeric(),
-                         mhStart2          = as.numeric(),
-                         mhEnd2            = as.numeric(),
-                         deletedSeq        = as.character(),
-                         delLength         = as.numeric(), 
-                         mhLength          = as.numeric(),
-                         GC                = as.numeric(),
-                         distToCut         = as.numeric(),
-                         outOfFrame        = as.numeric(),
-                         patternScore      = as.numeric(),
-                         stringsAsFactors  = FALSE)
+  # Get all common substrings between upstream and downstream sections of sequence
+  commonSubstrings <- allsubstr(upstream, downstream, mhL)
   
-  
-  #Get the portion of the sequence occurring after the cut site
-  seqDS <- substr(seq, cutIndex, nchar(seq))
-  
-  #Create all possible substrings from cutsite to beginning of sequence, and search for them in sequence downstream of cutsite (identif MH)
-  for(i in 1:(cutIndex-1)){
+  # Check if there are 2bp or > MH
+  if(length(commonSubstrings) > 0){ 
     
-    for(j in i:(cutIndex-1)){
-      
-      #Check to make sure i is not equal to j
-      if(i < j){
-        
-        #Generates a sliding window of possible substrings across all 
-        subSeq <- substr(seq, i, j)
-        
-        #Finds substring locations (if they exist) in downstream sequence
-        #Create a regexp search pattern with lookahead capabilities - so the with the query "CC", the sequence "CCC" would produce a match at 1 AND 2, and not just 1
-        location <- stringr::str_locate_all(seqDS, paste0("(?=", subSeq, ")")) 
-        #Workaround for the weird way str_locate_all handles lookahead matching
-        location <- list(start = location[[1]][,2] + 1, end = location[[1]][,2] + (nchar(subSeq) - 1))
-        
-        #If there are 1 or more microhomology sections downstream:
-        if(length(location[[1]]) != 0){
-          
-          #For each possible downstream instance:
-          for(k in 1:length(location[[1]])){
-            
-            #Calculate where the deleted section will start (1 nucleotide after the end of the left hand mh section):
-            delSeqStart <- j + 1
-            #Calculate where the deleted section will end (index of the last character of the right hand mh section):
-            delSeqEnd   <- cutIndex + location[[2]][k] - 1
-            
-            #Calculate the length of the deletion:
-            dL <- nchar(substr(seq, delSeqStart, delSeqEnd + 1))
-            
-            #Create '-' spacer for deletedSeqContext
-            context <- seq
-            str_sub(context, delSeqStart, delSeqEnd + 1) <- paste(rep("-", dL), collapse = '')
-            
-            #Determine Out of Frame - is the length of the deleted sequence divisible by 3?
-            if(dL %% 3 != 0){
-              oof <- 1
-            }else{
-              oof <- 0
-            }
-            
-            #Create a temporary data frame for the information
-            tempDF <- data.frame(id                = id,
-                                 seq               = seq,
-                                 deletedSeqContext = context,
-                                 microhomology     = subSeq,
-                                 startDel          = delSeqStart,
-                                 endDel            = delSeqEnd + location[[2]][k],
-                                 mhStart1          = i,
-                                 mhEnd1            = j,
-                                 mhStart2          = cutIndex + location[[1]][k],
-                                 mhEnd2            = cutIndex + location[[2]][k],
-                                 deletedSeq        = substr(seq, delSeqStart, delSeqEnd + 1),
-                                 delLength         = dL, 
-                                 mhLength          = nchar(subSeq),
-                                 GC                = sum(str_count(subSeq, c("G", "C", "g", "c")))/nchar(subSeq),
-                                 distToCut         = cutIndex - delSeqStart,
-                                 outOfFrame        = oof,
-                                 patternScore      = exp(-dL/20)*(nchar(subSeq)+sum(str_count(subSeq, c("G", "C", "g", "c"))))*100,
-                                 stringsAsFactors  = FALSE)
-            
-            #Add temp data frame to end of current data frame
-            delFrame <- rbind(delFrame, tempDF)
-          }
-          
+    # Find all upstream matches to common substrings
+    matchLocsUp       <- stack(sapply(commonSubstrings, Biostrings::gregexpr2, text = upstream))
+    matchLocsUp$ind   <- as.character(matchLocsUp$ind)
+    
+    # Find all downstream matches to common substrings
+    matchLocsDown     <- stack(sapply(commonSubstrings, Biostrings::gregexpr2, text = downstream))
+    matchLocsDown$ind <- as.character(matchLocsDown$ind)
+    
+    # Find all the starting and ending locations of the common substrings in the upstream portion
+    upStart   <- matchLocsUp$values
+    upEnd     <- matchLocsUp$values + nchar(matchLocsUp$ind) - 1
+    
+    # Do the same for the downstream
+    downStart <- matchLocsDown$values + nchar(upstream)
+    downEnd   <- matchLocsDown$values + nchar(matchLocsDown$ind) + nchar(upstream)
+    
+    # Store microhomologies in data frames
+    mhDFup <- data.frame(seq              = matchLocsUp$ind,
+                         upStart          = upStart,
+                         upEnd            = upEnd,
+                         stringsAsFactors = FALSE
+    )
+    
+    mhDFdown <- data.frame(seq              = matchLocsDown$ind,
+                           downStart        = downStart,
+                           downEnd          = downEnd,
+                           stringsAsFactors = FALSE
+    )
+    
+    # Order the data frames
+    mhDFup   <-   mhDFup[order(nchar(mhDFup$seq),   mhDFup$seq),   ]
+    mhDFdown <- mhDFdown[order(nchar(mhDFdown$seq), mhDFdown$seq), ]
+    
+    # Merge the two data frames
+    mhDF <- suppressMessages(plyr::join(mhDFup, mhDFdown))
+    
+    # Get the lengths of all the deletions
+    leng <- mhDF$downEnd - (mhDF$upEnd + 1)
+    
+    # Get the microhomologies
+    mh   <- mhDF$seq
+    
+    # Create the deletion sequences
+    delSeqCon <- unlist(lapply(1:nrow(mhDF), function(x) paste0(substring(seq, 1, mhDF$upEnd[x]),
+                                                                paste(rep('-', leng[x]), collapse = ''),
+                                                                substring(seq, mhDF$downEnd[x], nchar(seq)))))
+    
+    # Get the pattern that would be seen if the deletion ocurred
+    delPattern <- gsub('-', '', delSeqCon, fixed = TRUE)
+    
+    # Get the sequence deleted
+    delSeqs <- unlist(lapply(1:nrow(mhDF), function(x) substring(seq, mhDF$upEnd[x] + 1, mhDF$downEnd[x])))
+    
+    # Whether the deletion is out of frame
+    oof     <- unlist(lapply(leng, function(x) (if(x %% 3 != 0){1} else {0})))
+                
+    # Distance to the cut site
+    distC   <- unlist(lapply(1:nrow(mhDF), function(x) (cutIndex + 1) - (mhDF$upEnd[x] + 1)))
+    
+    # Create a data frame to hold information about predicted potential MMEJ events
+    # For instance, given sequence "GTGGCCGACGGGCTCATCACCACGCTCCATTATCCAGCCCCAAAGCGCAA":
+    # The first row of this frame (before sorting) will look like:
+    #
+    # This won't be here:GTGGCCGACGGGCTCATCACCACGCTCCATTATCCAGCCCCAAAGCGCAA     # Wildtype sequence for comparison
+    # deletedSeqContext: GTGGC---------------------------------CCCAAAGCGCAA     # Visualization of deletion pattern
+    # microhomology:        GC                                                  # The microhomology sequence (aligned to the sequence for comparison; actually just char vector)
+    # startDel:       6                                                         # The index of the first "-" deletion
+    # endDel:         38                                                        # The index of the last "-" deletion
+    # mhStart1:       4                                                         # The index of the first character in the left hand mh arm
+    # mhEnd1:         5                                                         # The index of the last character in the left hand mh arm
+    # mhStart2:       37                                                        # The index of the first character in the right hand mh arm
+    # mhEnd2:         38                                                        # The index of the last character in the right hand mh arm
+    # deletedSeq:             CGACGGGCTCATCACCACGCTCCATTATCCAGC                 # The deleted sequence (aligned to sequence for comparison)
+    # delLength:      33                                                        # length of deletedSeq
+    # mhLength:       2                                                         # Length of microhomology
+    # GC:             1                                                         # GC content of microhomology; percentage from 0 to 1
+    # distToCut:      20                                                        # Distance from the last nucleotide before the deletion to the location of the ds cut
+    # outOfFrame:     0                                                         # Whether the deletion produces an out of frame mutation (0 = no, 1 = yes)
+    
+    delFrame <- data.frame(id                = rep(id, length(delSeqs)),
+                           seq               = rep(seq, length(delSeqs)),
+                           deletedSeqContext = delSeqCon,
+                           delPattern        = delPattern,
+                           microhomology     = mh, 
+                           startDel          = mhDF$upEnd + 1, 
+                           endDel            = mhDF$downEnd, 
+                           mhStart1          = mhDF$upStart, 
+                           mhEnd1            = mhDF$upEnd,
+                           mhStart2          = mhDF$downStart,
+                           mhEnd2            = mhDF$downEnd,
+                           deletedSeq        = delSeqs,
+                           delLength         = leng, 
+                           mhLength          = nchar(mhDF$seq),
+                           GC                = (stringr::str_count(mh, 'G') + stringr::str_count(mh, 'C')) / nchar(mh),
+                           distToCut         = distC,
+                           outOfFrame        = oof,
+                           patternScore      = (100 * (round(1 / exp((leng) / weight), 3)) * 
+                                                  (stringr::str_count(mh, 'G') + stringr::str_count(mh, 'C') + nchar(mh))),
+                           stringsAsFactors  = FALSE)
+    
+    # Order the data frame by microhomology length, and then by pattern score
+    delFrameOrd <- delFrame[order(-nchar(delFrame$microhomology), -delFrame$patternScore),]
+    
+    # Find instances where two microhomologies produce the same deletion pattern; leave the longest microhomology with the largest pattern score
+    dupes <- sapply(1:nrow(delFrameOrd), function(x) unlist(sapply(1:x, function(y){
+      if(x != y){
+        if(delFrameOrd$delPattern[x] == delFrameOrd$delPattern[y]){
+          TRUE
         } else {
-          #If the current MH search isn't found, stop looking for longer versions including it (for efficiency)
-          i <- i + 1
-          
+          FALSE
         }
+      } else {
+        FALSE
       }
-    }
+    })))
+    
+    # Find which instances have a match
+    dupeDrop <- sapply(dupes, function(x) any(x))
+    
+    # Remove the duplicates
+    dupeDropList      <- which(dupeDrop)
+    delFrameOrdDeDupe <- delFrameOrd[-dupeDropList,]
+    
+    # Order the data frame based on pattern score
+    delFrame <- delFrameOrdDeDupe[order(-delFrameOrdDeDupe$patternScore), ]
+    
+  } else {
+    
+    #Create empty return frame if no MHs detected
+    delFrame <- data.frame(id                = as.character(),
+                           seq               = as.character(),
+                           deletedSeqContext = as.character(),
+                           microhomology     = as.character(), 
+                           startDel          = as.numeric(), 
+                           endDel            = as.numeric(), 
+                           mhStart1          = as.numeric(), 
+                           mhEnd1            = as.numeric(),
+                           mhStart2          = as.numeric(),
+                           mhEnd2            = as.numeric(),
+                           deletedSeq        = as.character(),
+                           delLength         = as.numeric(), 
+                           mhLength          = as.numeric(),
+                           GC                = as.numeric(),
+                           distToCut         = as.numeric(),
+                           outOfFrame        = as.numeric(),
+                           patternScore      = as.numeric(),
+                           stringsAsFactors  = FALSE)
+    
   }
   
-  #Eliminate identical rows
-  delFrameU <- unique(delFrame)
-  
-  #Create a list of "redundant" rows - rows containing a microhomology and deletion pattern pattern wholly contained within a larger mh
-  removal <- list()
-  
-  #Redundancy removal
-  for(m in 1:nrow(delFrameU)){
-    
-    #Search each microhomology for the current microhomology
-    hits <- grep(delFrameU$microhomology[m], delFrameU$microhomology)
-    hits <- hits[which(hits!=m)]
-    
-    if(length(hits > 0)){
-      for(n in hits){
-        #Detect if the mh pattern is wholly contained within another pattern
-        if((delFrameU$mhStart1[m] >= delFrameU$mhStart1[n]) && 
-           (delFrameU$mhStart2[m] >= delFrameU$mhStart2[n]) && 
-           (delFrameU$mhEnd1[m]   <= delFrameU$mhEnd1[n])   && 
-           (delFrameU$mhEnd2[m]   <= delFrameU$mhEnd2[n])){
-          
-          #Detect if the deletion patterns are the same
-          if(((delFrameU$mhStart1[m] - delFrameU$mhStart1[n]) == (delFrameU$mhStart2[m] - delFrameU$mhStart2[n])) && 
-             ((delFrameU$mhEnd1[m]   - delFrameU$mhEnd1[n])   == (delFrameU$mhEnd2[m]   - delFrameU$mhEnd2[n]))){
-            
-            #If they are the same - add to the removal list
-            removal <- c(removal, m)
-          }
-        }
-      }
-    }
-  }
-  
-  #Remove redundant entries from removal list
-  removal <- unlist(unique(removal))
-  
-  #Order for outputting nicely
-  uFrame <- delFrameU[-removal,]
-  uFrame1 <- uFrame[order(-nchar(uFrame$microhomology), uFrame$endDel),]
-  
-  return(uFrame1)
+  return(delFrame)
 }
 
+#' allsubstr
+#'
+#' @param upstream   upstream section of DNA sequence 
+#' @param downstream downstream section of DNA sequence
+#'
+#' @return
+#' @export
+#'
+#' @examples
+
+allsubstr <- function(upstream, downstream, mh = 3){
+  #Create empty string to hold upstream strings
+  upstreamStrings   <- list()
+  
+  #Create empty string to hold downstream strings
+  downstreamStrings <- list()
+  
+  #Generate all possible substrings of length >= 3 in the upstream and downstream strings
+  for(i in mh:nchar(upstream)){
+    upstreamStrings   <- c(upstreamStrings,   unique(substring(upstream,   1:(nchar(upstream)   - i + 1), i:nchar(upstream))))
+    downstreamStrings <- c(downstreamStrings, unique(substring(downstream, 1:(nchar(downstream) - i + 1), i:nchar(downstream))))
+  }
+  
+  #Find the intersection (common strings) between the upstream and downstream section
+  commonStrings <- intersect(unlist(upstreamStrings), unlist(downstreamStrings))
+  
+  return(commonStrings)
+} 
 
 #' generateFeatureVector
 #'
@@ -203,38 +229,45 @@ generateFeatureVector <- function(uFrame){
   #Calculate information about predicted deletions
   returnFrame <- data.frame(id                 = uFrame$id,
                             sequence           = uFrame$seq,
-                            maxDelLength       = max(uFrame$delLength)/nchar(uFrame$seq),
-                            minDelLength       = min(uFrame$delLength)/nchar(uFrame$seq),
-                            meanDelLength      = mean(uFrame$delLength)/nchar(uFrame$seq),
-                            medianDelLength    = median(uFrame$delLength)/nchar(uFrame$seq),
-                            stDevDelLength     = sd(uFrame$delLength)/nchar(uFrame$seq),
-                            maxMHLength        = max(uFrame$mhLength)/nchar(uFrame$seq),
-                            minMHLength        = min(uFrame$mhLength)/nchar(uFrame$seq),
-                            meanMHLength       = mean(uFrame$mhLength)/nchar(uFrame$seq),
-                            medianMHLength     = median(uFrame$mhLength)/nchar(uFrame$seq),
-                            stDevMHLength      = sd(uFrame$mhLength)/nchar(uFrame$seq),
-                            maxGC              = max(uFrame$GC)/nchar(uFrame$seq),
-                            minGC              = min(uFrame$GC)/nchar(uFrame$seq),
-                            meanGC             = mean(uFrame$GC)/nchar(uFrame$seq),
-                            medianGC           = median(uFrame$GC)/nchar(uFrame$seq),
-                            stDevGC            = sd(uFrame$GC)/nchar(uFrame$seq),
-                            maxDistC           = max(uFrame$distToCut)/nchar(uFrame$seq),
-                            minDistC           = min(uFrame$distToCut)/nchar(uFrame$seq),
-                            meanDistC          = mean(uFrame$distToCut)/nchar(uFrame$seq),
-                            medianDistC        = median(uFrame$distToCut)/nchar(uFrame$seq),
-                            stDevDistC         = sd(uFrame$distToCut)/nchar(uFrame$seq),
-                            perOutOfFrame      = sum(uFrame$outOfFrame)/nrow(uFrame), 
-                            sequenceGC         = sum(str_count(uFrame$seq[1], c("G", "C", "g", "c")))/nchar(uFrame$seq[1]),
-                            mhScoreNorm        = sum(uFrame$patternScore)/nchar(uFrame$seq),
-                            oofScore           = (sum(uFrame$patternScore[which(uFrame$outOfFrame == 1)])/sum(uFrame$patternScore))*100,
-                            maxPatternScore    = max(uFrame$patternScore)/nchar(uFrame$seq),
-                            minPatternScore    = min(uFrame$patternScore)/nchar(uFrame$seq),
-                            meanPatternScore   = mean(uFrame$patternScore)/nchar(uFrame$seq),
-                            medianPatternScore = median(uFrame$patternScore)/nchar(uFrame$seq),
-                            stDevPatternScore  = sd(uFrame$patternScore)/nchar(uFrame$seq),
+                            maxDelLength       = max(   uFrame$delLength)    / nchar(uFrame$seq),
+                            minDelLength       = min(   uFrame$delLength)    / nchar(uFrame$seq),
+                            meanDelLength      = mean(  uFrame$delLength)    / nchar(uFrame$seq),
+                            medianDelLength    = median(uFrame$delLength)    / nchar(uFrame$seq),
+                            stDevDelLength     = sd(    uFrame$delLength)    / nchar(uFrame$seq),
+                            
+                            maxMHLength        = max(   uFrame$mhLength)     / nchar(uFrame$seq),
+                            minMHLength        = min(   uFrame$mhLength)     / nchar(uFrame$seq),
+                            meanMHLength       = mean(  uFrame$mhLength)     / nchar(uFrame$seq),
+                            medianMHLength     = median(uFrame$mhLength)     / nchar(uFrame$seq),
+                            
+                            stDevMHLength      = sd(uFrame$mhLength)         / nchar(uFrame$seq),
+                            
+                            maxGC              = max(   uFrame$GC)           / nchar(uFrame$seq),
+                            minGC              = min(   uFrame$GC)           / nchar(uFrame$seq),
+                            meanGC             = mean(  uFrame$GC)           / nchar(uFrame$seq),
+                            medianGC           = median(uFrame$GC)           / nchar(uFrame$seq),
+                            stDevGC            = sd(    uFrame$GC)           / nchar(uFrame$seq),
+                            
+                            maxDistC           = max(   uFrame$distToCut)    / nchar(uFrame$seq),
+                            minDistC           = min(   uFrame$distToCut)    / nchar(uFrame$seq),
+                            meanDistC          = mean(  uFrame$distToCut)    / nchar(uFrame$seq),
+                            medianDistC        = median(uFrame$distToCut)    / nchar(uFrame$seq),
+                            stDevDistC         = sd(    uFrame$distToCut)    / nchar(uFrame$seq),
+                            
+                            perOutOfFrame      = sum(   uFrame$outOfFrame)   / nrow(uFrame), 
+                            
+                            sequenceGC         = sum(str_count(uFrame$seq[1], c("G", "C", "g", "c"))) / nchar(uFrame$seq[1]),
+                            
+                            mhScoreNorm        = sum(   uFrame$patternScore) / nchar(uFrame$seq),
+                            
+                            oofScore           = (sum(  uFrame$patternScore[which(uFrame$outOfFrame == 1)]) / sum(uFrame$patternScore)) * 100,
+                            
+                            maxPatternScore    = max(   uFrame$patternScore) / nchar(uFrame$seq),
+                            minPatternScore    = min(   uFrame$patternScore) / nchar(uFrame$seq),
+                            meanPatternScore   = mean(  uFrame$patternScore) / nchar(uFrame$seq),
+                            medianPatternScore = median(uFrame$patternScore) / nchar(uFrame$seq),
+                            stDevPatternScore  = sd(    uFrame$patternScore) / nchar(uFrame$seq),
+                            
                             stringsAsFactors = FALSE)
   return(unique(returnFrame))
 }
-
-
-
