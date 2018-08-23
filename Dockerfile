@@ -19,7 +19,7 @@ RUN R -e "install.packages(c('shiny', 'stringr', 'randomForest', 'ggplot2'), rep
 
 # Copy MEDJED to image
 RUN mkdir /root/medjed/
-COPY medjed /root/medjed
+COPY / /root/medjed
 
 COPY Rprofile.site /usr/lib/R/etc/
 
