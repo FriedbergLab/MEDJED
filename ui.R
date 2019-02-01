@@ -11,31 +11,39 @@ shinyUI(
   
   #Creates the navbar set-up
   navbarPage(
-    id = 'mainPage',
+    id          = 'mainPage',
     windowTitle = "MEDJED",
     
     #Stylesheet
     theme = "ogtheme.css", 
     
     #Page title box
-    tags$div("MEDJED v1.1.1", 
+    tags$div("MEDJED v1.1.2", 
              style = "color:white"),
     
     ########ABOUT TAB#################################################
-    tabPanel(tags$div("About MEDJED", style = "color:white"),
+    tabPanel(tags$div("About"),
              titlePanel(""),
              
              #Sidebar panel with links
              column(2, wellPanel(
-               tags$div(tags$span(a(href = "http://ll-g2f.gdcb.iastate.edu/gss/", target = "_blank", tags$img(src = "GSS logo small.png", width = "100%")))),
+               tags$div(tags$span(a(href   = "http://ll-g2f.gdcb.iastate.edu/gss/", 
+                                    target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href = "https://www.iastate.edu/",   target = "_blank", tags$img(src = "isu-logo-alt.png",     width = "100%")))),
+               tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
+                                    target = "_blank", tags$img(src = "isu-logo-alt.png",                  width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href = "https://www.mayoclinic.org", target = "_blank", tags$img(src = "MC_stack_4c_DAC.png", width = "100%")))),
+               tags$div(tags$span(a(href   = "https://www.mayoclinic.org", 
+                                    target = "_blank", tags$img(src = "MC_stack_4c_DAC.png",               width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href = "https://www.genomewritersguild.org/", 
-                                    target = "_blank", 
-                                    tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%"))))
+               tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
+                                    target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+                                    target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+                                    target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
              )),
              
              #Text area in center of page
@@ -48,22 +56,21 @@ shinyUI(
     
     ##########SUBMIT JOB TAB###################################
     tabPanel(id = "predict",
-             tags$div("Predict MMEJ Outcomes", style = "color:white"),
+             tags$div("Submit"),
              titlePanel(""),
              
              ##Sidebar############################################################
              #Adds a sidebar for users to pre-populate fields with an example, and reset the form
              column(2, wellPanel(
-               
+               class = "examplePanel",
                #Cut/Paste cDNA example; input$example
-               actionLink("example", 
-                          label = "Example"),
+               actionLink("example", label = "[Example Input]"),
                
+               tags$br(),
                tags$br(),
                
                #Reset Button; input$reset
-               actionLink("reset", 
-                          label = "Reset Form")
+               actionLink("reset",   label = "Reset Form")
              )),
              
              ####Main Bar#########################################################
@@ -84,7 +91,7 @@ shinyUI(
                #),
                #conditionalPanel(
                #  condition = "input.outcomeOp == 2",
-               
+               h3("Submit Sequence to MEDJED"),
                p(paste0("Input your target sequence of interest (we recommend 50-80 bases, but you can input up to 200. ", 
                         "Your sequence must have an even number of nucleotides, with the cut site occurring between the middle-most nucleotides. ")),
                p("For example, the sequence below consists of 50 nucleotides, and the expected cut site (lightning bolt) occurs between bases 25 and 26."),
@@ -114,13 +121,13 @@ shinyUI(
     
     ##########FUNDING Tab#############################################
     tabPanel(
-      tags$div("Funding", style = "color:white"),
+      tags$div("Funding"),
       titlePanel(""),
       
       #Sidebar panel with links
       column(2, wellPanel(
         #Sidebar panel with links
-        tags$div(tags$span(a(href   = "http://genesculpt.org/gss/", 
+        tags$div(tags$span(a(href   = "http://ll-g2f.gdcb.iastate.edu/gss/", 
                              target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
         tags$br(),
         tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -131,6 +138,12 @@ shinyUI(
         tags$br(),
         tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
                              target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
+        tags$br(),
+        tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+                             target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
+        tags$br(),
+        tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+                             target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%")))),
         tags$br(),
         tags$div(tags$span(a(href = "https://www.nih.gov/", 
                              target = "_blank", tags$img(src = "nihlogo.png",                       width = "100%")))),
@@ -145,20 +158,28 @@ shinyUI(
     ),
     
     ##########HOW TO CITE Tab#########################################
-    tabPanel(tags$div("How to Cite", style = "color:white"),
+    tabPanel(tags$div("How to Cite"),
              titlePanel(""),
              
              #Sidebar panel with links
              column(2, wellPanel(
-               tags$div(tags$span(a(href = "http://ll-g2f.gdcb.iastate.edu/gss/", target = "_blank", tags$img(src = "GSS logo small.png", width = "100%")))),
+               tags$div(tags$span(a(href   = "http://ll-g2f.gdcb.iastate.edu/gss/", 
+                                    target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href = "https://www.iastate.edu/",   target = "_blank", tags$img(src = "isu-logo-alt.png",     width = "100%")))),
+               tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
+                                    target = "_blank", tags$img(src = "isu-logo-alt.png",                  width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href = "https://www.mayoclinic.org", target = "_blank", tags$img(src = "MC_stack_4c_DAC.png", width = "100%")))),
+               tags$div(tags$span(a(href   = "https://www.mayoclinic.org", 
+                                    target = "_blank", tags$img(src = "MC_stack_4c_DAC.png",               width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href = "https://www.genomewritersguild.org/", 
-                                    target = "_blank", 
-                                    tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%"))))
+               tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
+                                    target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+                                    target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+                                    target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
              )),
              
              #Text area in center of page
@@ -168,20 +189,28 @@ shinyUI(
     ),
     
     ##########CONTACT US Tab##########################################
-    tabPanel(tags$div("Report Bugs or Contact Us", style = "color:white"),
+    tabPanel(tags$div("Report Bugs or Contact Us"),
              titlePanel(""),
              
              #Sidebar panel with links
              column(2, wellPanel(
-               tags$div(tags$span(a(href = "http://ll-g2f.gdcb.iastate.edu/gss/", target = "_blank", tags$img(src = "GSS logo small.png", width = "100%")))),
+               tags$div(tags$span(a(href   = "http://ll-g2f.gdcb.iastate.edu/gss/", 
+                                    target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href = "https://www.iastate.edu/",   target = "_blank", tags$img(src = "isu-logo-alt.png",     width = "100%")))),
+               tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
+                                    target = "_blank", tags$img(src = "isu-logo-alt.png",                  width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href = "https://www.mayoclinic.org", target = "_blank", tags$img(src = "MC_stack_4c_DAC.png", width = "100%")))),
+               tags$div(tags$span(a(href   = "https://www.mayoclinic.org", 
+                                    target = "_blank", tags$img(src = "MC_stack_4c_DAC.png",               width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href = "https://www.genomewritersguild.org/", 
-                                    target = "_blank", 
-                                    tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%"))))
+               tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
+                                    target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+                                    target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+                                    target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
              )),
              
              #Text area in center of page
@@ -203,20 +232,28 @@ shinyUI(
     
     ##########Changelog#############################################
     tabPanel(
-      tags$div("Changelog", style = "color:white"),
+      tags$div("Changelog"),
       titlePanel(""),
       
       #Sidebar panel with links
       column(2, wellPanel(
-        tags$div(tags$span(a(href = "http://ll-g2f.gdcb.iastate.edu/gss/", target = "_blank", tags$img(src = "GSS logo small.png", width = "100%")))),
+        tags$div(tags$span(a(href   = "http://ll-g2f.gdcb.iastate.edu/gss/", 
+                             target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
         tags$br(),
-        tags$div(tags$span(a(href = "https://www.iastate.edu/",   target = "_blank", tags$img(src = "isu-logo-alt.png",     width = "100%")))),
+        tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
+                             target = "_blank", tags$img(src = "isu-logo-alt.png",                  width = "100%")))),
         tags$br(),
-        tags$div(tags$span(a(href = "https://www.mayoclinic.org", target = "_blank", tags$img(src = "MC_stack_4c_DAC.png", width = "100%")))),
+        tags$div(tags$span(a(href   = "https://www.mayoclinic.org", 
+                             target = "_blank", tags$img(src = "MC_stack_4c_DAC.png",               width = "100%")))),
         tags$br(),
-        tags$div(tags$span(a(href = "https://www.genomewritersguild.org/", 
-                             target = "_blank", 
-                             tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%"))))
+        tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
+                             target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
+        tags$br(),
+        tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+                             target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
+        tags$br(),
+        tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+                             target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
       )),
       
       column(9,
