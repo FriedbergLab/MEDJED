@@ -18,11 +18,10 @@ shinyUI(
     theme = "ogtheme.css", 
     
     #Page title box
-    tags$div("MEDJED v1.1.2", 
-             style = "color:white"),
+    tags$div(""),
     
     ########ABOUT TAB#################################################
-    tabPanel(tags$div("About"),
+    tabPanel(tags$div("MEDJED v1.1.2"),
              titlePanel(""),
              
              #Sidebar panel with links
@@ -56,15 +55,17 @@ shinyUI(
     
     ##########SUBMIT JOB TAB###################################
     tabPanel(id = "predict",
-             tags$div("Submit"),
+             tags$div("Submit Job"),
              titlePanel(""),
              
              ##Sidebar############################################################
              #Adds a sidebar for users to pre-populate fields with an example, and reset the form
              column(2, wellPanel(
                class = "examplePanel",
+               
+               p(tags$b(tags$u("Example Input"))),
                #Cut/Paste cDNA example; input$example
-               actionLink("example", label = "[Example Input]"),
+               actionLink("example", label = "[Example Sequence]"),
                
                tags$br(),
                tags$br(),
@@ -92,7 +93,7 @@ shinyUI(
                #conditionalPanel(
                #  condition = "input.outcomeOp == 2",
                h3("Submit Sequence to MEDJED"),
-               p(paste0("Input your target sequence of interest (we recommend 50-80 bases, but you can input up to 200. ", 
+               p(paste0("Input your target sequence of interest (we recommend 50-80 bases, but you can input up to 200). ", 
                         "Your sequence must have an even number of nucleotides, with the cut site occurring between the middle-most nucleotides. ")),
                p("For example, the sequence below consists of 50 nucleotides, and the expected cut site (lightning bolt) occurs between bases 25 and 26."),
                
@@ -184,7 +185,7 @@ shinyUI(
              
              #Text area in center of page
              column(9, wellPanel(
-               p("Manuscript is in prep. Citation will be available soon."))
+               p("Citation coming soon."))
              )
     ),
     
