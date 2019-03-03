@@ -1,15 +1,15 @@
 # MEDJED
 This is a repository for the MEDJED microhomology mediated end-joining repair prediction tool.
 
-You can run MEDJED online through a web interface here: http://ll-g2f.gdcb.iastate.edu/medjed/
+You can run MEDJED online through a web interface here: https://genesculpt.org/medjed/
  
 
-### If you already have R and/or RStudio installed, you can jump to [here](https://github.com/Dobbs-Lab/MEDJED#run-medjed-locally) to immmediately start running MEDJED locally.
+### If you already have R and/or RStudio installed, you can jump to [here](https://github.com/Dobbs-Lab/MEDJED#3-run-medjed-locally) to immmediately start running MEDJED locally.
 
 ### If you are having issues running MEDJED locally, please check the [Troubleshooting](https://github.com/Dobbs-Lab/MEDJED#troubleshooting) section before requesting help.
  
 
-# How to Run MEDJED Locally
+# [How to Run MEDJED Locally](#run-medjed-locally)
 You will need to have the ability to install software on the computer you are using to run MEDJED locally; this may require administrator privileges. 
 
 [1. Download and Install R](https://github.com/Dobbs-Lab/MEDJED#1-download-and-install-r)
@@ -62,7 +62,7 @@ After downloading the RStudio installer, follow the installation instructions. I
 
 
 
-## [3. Run MEDJED locally](#run-medjed-locally)
+## [3. Run MEDJED locally](#3-run-medjed-locally)
 You can run this RShiny web app in R (or RStudio) by opening up an R or RStudio session.
 
 You can copy and paste the code blocks below into your R/RStudio console to run them.
