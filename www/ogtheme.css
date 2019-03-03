@@ -49,6 +49,28 @@ code {
   font-size: 20px;
 }
 
+figure {
+    
+    margin-left: auto;
+    margin-right: auto;
+}
+
+img {
+    width: 80%;
+    display: block;
+    height: auto;
+    margin: 10px auto 10px auto;
+}
+
+figcaption {
+    caption-side: bottom;
+    width: 100%;
+    height: auto;
+    font-size: 14px;
+    text-align: center;
+}
+
+
 /* Style Example Panel */
 .examplePanel {
 	background-color: #F1BE48;
