@@ -9,7 +9,7 @@ You can run MEDJED online through a web interface here: http://ll-g2f.gdcb.iasta
 ### If you are having issues running MEDJED locally, please check the [Troubleshooting](https://github.com/Dobbs-Lab/MEDJED#troubleshooting) section before requesting help.
  
 
-# How to Run MEDJED Locally
+# [How to Run MEDJED Locally](#run-medjed-locally)
 You will need to have the ability to install software on the computer you are using to run MEDJED locally; this may require administrator privileges. 
 
 [1. Download and Install R](https://github.com/Dobbs-Lab/MEDJED#1-download-and-install-r)
