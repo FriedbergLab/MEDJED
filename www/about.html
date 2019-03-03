@@ -2,6 +2,35 @@
 <html>
   <head></head>
   <body>
-    <p><strong>MEDJED</strong> (<u>M</u>icrohomology <u>E</u>voked <u>D</u>eletion <u>J</u>udication <u>E</u>luci<u>d</u>ation) is a tool for genome engineering using CRISPR and TALEN technologies. <strong>MEDJED</strong> will predict the percentage of microhomology-mediated end joining repair events for a given CRISPR/TALEN target site and its gene context.</p>
+    <h2>MEDJED</h2>
+    <p><strong>MEDJED</strong> (<b>M</b>icrohomology <b>E</b>voked <b>D</b>eletion <b>J</b>udication <b>E</b>luci<b>d</b>ation) is a tool for assessing the probability of microhomology-mediated end joining repair at a particular DNA double-strand break site.</p>
+    <p>MEDJED is a random forest method trained using 5-fold cross validation on a set of 46 HeLa cell targets. It uses sequence features incorporating information about the length, GC content, distance between microhomology arms, and distance between microhomology arms and the DSB site to predict the proportion of deletion events due to MMEJ repair.</p>
+    <figure style="margin-left:auto;margin-right:auto;">
+      <img src="medjed_results_figure.png" alt="MEDJED prediction results">
+      <figcaption>MEDJED Performance on Independent Test Set</figcaption>
+    </figure>
+    <br />
+    <p>On an independent test set of 44 HeLa cell tragets, MEDJED achieves a mean absolute errror (MAE) of 14%, root mean square error (RMSE) of 16%, and Pearson Correlation Coefficient (CC) of 68% when comparing the predicted proportion of MMEJ repair outcomes with the observed proportion of MMEJ repair outcomes.</p>
+    <br />
+    <h3>Instructions</h3>
+    <p>To predict the proportion of MMEJ repair at a particular DSB site, choose the "<b>Submit Job</b>" tab.</p>
+    <p>For information on the NIH R24 grant which supported the development of this tool, see "<b>Funding</b>."</p>
+    <p>For information on citing MEDJED in your research, see "<b>How to Cite</b>."</p>
+    <p>If you experience bugs, wish to request features, or need other help, please fill out the form at "<b>Report Bugs or Contact Us</b>."</p>
+    <br />
+    <h3>Download MEDJED</h3>
+    <p>A standalone version of this code can be freely downloaded from our <a href="https://github.com/Dobbs-Lab/MEDJED" target="_blank">GitHub repository</a>.</p>
+    <p>There are extensive installation and usage instructions available in the GitHub <a href="https://github.com/Dobbs-Lab/MEDJED/blob/master/README.md" target="_blank">README</a> file.</p>
+    <p>You can clone the repository with the following git command:</p>
+    <div style="text-align:center;"><code>git clone https://github.com/Dobbs-Lab/MEDJED.git</code></div>
+    <br />
+    <p>The MEDJED R code is provided as-is; please be aware that you modify the code at your own risk. We are unable to provide technical support for modified versions.</p>
+    <br />
+    <h3>Run MEDJED Locally</h3>
+    <p>If you have R installed on your system, you can also follow the instructions <a href="https://github.com/Dobbs-Lab/MEDJED#run-medjed-locally" target="_blank">here</a> to easily run the MEDJED RShiny app from R, without dealing with Git.</p>
+    <p>MEDJED is also available as a Docker image. If you have Docker installed, you can clone the Docker image using the following command:</p>
+    <div style="text-align:center;"><code>sudo docker pull cmmann/medjed</code></div>
+    <h3>License</h3>
+    <p>MEDJED is provided under a GPL v3.0 license. You can read the full text <a href="https://github.com/Dobbs-Lab/MEDJED/blob/master/LICENSE" target="_blank">here</a>.</p>
   </body>
 </html>
