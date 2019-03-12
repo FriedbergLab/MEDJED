@@ -21,7 +21,7 @@ shinyUI(
     tags$div(""),
     
     ########ABOUT TAB#################################################
-    tabPanel(tags$div("MEDJED v1.1.3"),
+    tabPanel(tags$div("MEDJED v1.1.4"),
              titlePanel(""),
              
              #Sidebar panel with links
