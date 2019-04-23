@@ -232,7 +232,7 @@ shinyUI(
                                   tags$a(href = "https://github.com/Dobbs-Lab/MEDJED#3-run-MEDJED-locally", target = "_blank", "here"),
                                   " to easily run the MEDJED RShiny app from R, without dealing with Git."))),
                p("MEDJED is also available as a Docker container image. You can clone the Docker image using the following command:"),
-               tags$p(tags$code("sudo docker pull cmmann/MEDJED"), style = "text-align:center;")
+               tags$p(tags$code("sudo docker pull cmmann/medjed"), style = "text-align:center;")
                
              ))
              
