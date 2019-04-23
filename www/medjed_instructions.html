@@ -1,4 +1,104 @@
-<p>MEDJED (Microhomology Evoked Deletion Judication EluciDation) is a tool for predicting the proportion of detectable MMEJ-repaired deletion events produced by doublestrand DNA break caused by CRISPR or TALEN editing.</p>
-<p></p>
-<p>MEDJED is a machine learning predictor utilizing (details). </p>
-<p>To use the tool, navigate to the "Predict MMEJ Outcomes" tab.</p>
+<!DOCTYPE HTML>
+<html>
+  <head></head>
+  <body>
+      <h3 style = "display:inline-block">Instructions  </h3><a href="#instructions" data-toggle = "collapse"> expand/collapse </a>
+      <div id = "instructions" class = "collapse in">
+
+    <p>To predict the proportion of MMEJ repair at a particular DSB site, choose the "<b>Submit Job</b>" tab.</p>
+    <p>For information on the NIH R24 grant which supported the development of this tool, see "<b>Funding</b>."</p>
+    <p>For information on citing MEDJED in your research, see "<b>How to Cite</b>."</p>
+    <p>If you experience bugs, wish to request features, or need other help, please fill out the form at "<b>Report Bugs or Contact Us</b>."</p>
+    <br />
+    
+    <h3>How to Use MEDJED</h3>
+    <p>MEDJED takes a DNA sequence as input, assumes a double-strand break (DSB) in the exact middle of the sequence, and then predicts the proportion of deletions which will match a microhomology-mediated end joining (MMEJ) outcome.</p>
+    <p><b>Step 1) Input a DNA sequence into the text box.</b> This sequence must only use 'A', 'C', 'G', or 'T' characters, must be between 20 and 200 nucleotides in length, and must have an even number of nucleotides. MEDJED assumes that the DSB will occur in the exact middle of the sequence - e.g., in a sequence with 50 nucleotides, MEDJED assumes the DSB occurs between nucleotides 25 and 26.</p>
+    <p><b>Step 2) Retrieve the output.</b> All MEDJED outputs can be downloaded by clicking the "Download All Outputs" button; this generates a .zip file containing the output files. Each individual output can also be downloaded using its corresponding download button. Each file is prefixed with the date and time (YYYY-MM-DD-hh-mm-ss) when the input sequence was submitted; this prefix is combined with a descriptor of the file contents.</p>
+    <p>MEDJED outputs three items:</p>
+    <ol>
+      <li><b><p>MEDJED Prediction:</b> This output (in bright blue for visibility) is the proportion of deletion events for the target sequence that are predicted to be the result of MMEJ - i.e., the proportion of reads in a sequencing run you would expect to see which match an MMEJ deletion pattern.</p>
+      <p>Click the "Download MEDJED Prediction" button to download a CSV format file containing your input sequence and the predicted proportion of MMEJ deletions ("MEDJED Prediction").</p></li>
+      <!--Example picture here -->
+      <li><p><b>Table of MEDJED Predictor Values:</b> This output is the value of the features the MEDJED machine learning model uses to make its prediction. MEDJED identifies the possible microhomologies surrounding the DNA DSB site, and calculates six features from these microhomologies:</p>
+         <ol>
+           <li><p><b>Minimum DL (Minimum Deletion Length):</b> The "Deletion Length" is the number of nucleotides removed from the sequence if a particular microhomology is utilized. Each microhomology has its own deletion length; the "Minimum Deletion Length" is the length of the deletion of the microhomology producing the shortest deletion length, divided by the length of the input sequence.
+           <!--Example picture here --></p></li>
+           <li><p><b>Maximum ML (Maximum Microhomology Length):</b> The "Microhomology Length" is the number of nucleotides that make up the microhomology used in the MMEJ repair. The "Maximum Microhomology Lenght" is the length of the longest microhomology within the sequence context, divided by the length of the input sequence.</p></li>
+           
+           <li><p><b>Mean ML (Mean Microhomology Length):</b> The "Mean Microhomology Length" is the arithmetic mean of all the microhomology lengths for all potential MMEJ deletion patterns within the input sequence context, divided by the length of the input sequence.</p></li>
+           
+           <li><p><b>Standard Deviation of ML (Standard Deviation of Microhomology Length):</b> The "Standard Deviation of the Microhomology Length" is the standard deviation of all the microhomology lengths for all potential MMEJ deletion patterns within the input sequence context, divided by the length of the input sequence.</p></li>
+           
+           <li><p><b>Maximum PS (Maximum Pattern Score):</b> The "Pattern Score" is a scoring scheme devised by <a href="https://www.nature.com/articles/nmeth.3015" target="_blank">Bae et al. (Nat Methods 2014)</a>. The Pattern Score approximates the "strength" of a microhomology for use by the MMEJ pathway. The "Maximum Pattern Score" is the value of the pattern score for the highest-scoring microhomology deletion pattern.</p></li>
+           
+           <li><p><b>Standard Deviation of PS (Standard Deviation of Pattern Score):</b> The "Standard Deviation of Pattern Score" is the standard deviation of the pattern scores for all potential MMEJ deletion patterns within the input sequence context, divided by the length of the input sequence.</p></li>
+         </ol>
+         
+         <p>Click the "Download MEDJED Predictor Values" button to download a CSV format file consisting of eight columns. The first column is the input target sequence ("Target Sequence"); columns 2-7 ("Minimum DL", "Maximum ML", "Mean ML", "Standard Deviation of ML", "Maximum PS", "Standard Deviation of PS") correspond to the features described above; column 8 ("MEDJED Prediction") is the predicted MEDJED score described in "MEDJED Prediction."</p>
+         </li>
+         
+      <li><p><b>Table of Microhomology Deletion Patterns:</b> The final output is the list of all potential "canonical" microhomologies within the input sequence - i.e., microhomologies with canonical base-pairing between all nucleotides in the microhomology arms. (Note that MMEJ has been demonstrated to occasionally utilize "imperfect" microhomologies - i.e., microhomologies containing a mismatch (or mismatches) between the microhomology arms. For example, it is possible for MMEJ to pair "GCCA<b>C</b>A" with "GCCA<b>A</b>A", even though there is a mismatch between the "A" and "C"). The table will dispaly in a mono-spaced font (if this is not overridden by your browser settings) to better show how deletion patterns align to the wildtype sequence.</p>
+      <p>This table has four output columns:</p>
+      <ol>
+        <li><b>Microhomology:</b> This column contains the microhomology sequence used to generate a particular deletion pattern (or "Wildtype" for the input sequence.)</li>
+        <li><b>MH Length (Microhomology Length):</b> This column contains the length of the microhomology sequence.</li>
+        <li><b>Del. Length (Deletion Length):</b> This column provides the number of nucleotides that would be excised as a result of MMEJ utilizing the corresponding microhomology to repair the DSB.</li>
+        <li><b>Del. Pattern (Deletion Pattern):</b> This column provides the "deletion pattern" for a particular microhomology - i.e., the sequence which would result if MMEJ utilized the corresponding Microhomology to repair the DSB. Deleted nucleotides are indicated by dashes ('-').</li>
+      </ol>
+      <p>The deletion pattern table by default displays all deletion patterns for a particular DSB. It is searchable via the Search box in the upper right hand corner. For longer input sequences, users can horizontally scroll through the input using the scrollbar. The table can be sorted by column values by clicking on a particular column; e.g., to sort from longest to shortest microhomology, click on "MH Length" twice - the first click sorts from shortest to longest, and the second click will reverse the sort order, from longest to shortest.</p>
+      <p>Click the "Download Microhomology Deletion Pattern Table" to download this table in CSV format.</p>
+      </li>
+      
+    </ol>
+    
+        </div>
+      <!-- FAQs ######################################################################################################################### -->
+       <br /> 
+      <h3 style = "display:inline-block">Frequently Asked Questions (FAQs)  </h3><a href="#FAQs" data-toggle = "collapse"> expand/collapse </a>
+<div id = "FAQs" class = "collapse in">
+  </div>  
+  <p><b>How do I correct the error message I received?</b></p>
+  <p></p>
+  <ol>
+    <li><a href="#error1">Error: Input target sequence contains non-standard nucleotides. Allowed nucleotides are A, C, G, and T.</a></li>
+    <li><a href="#error2">Error: There are x nucleotides in the pasted sequence. There must be an even number of nucleotides in the input sequence.</a></li>
+    <li><a href="#error3">Error: Please input 200 or fewer nucleotides of context. We recommende 50-80 bp.</a></li>
+    <li><a href="#error4">Error: Not enough sequence context to perform calculations. Please input at least 20 nucleotides.</a></li>
+  </ol>
+  
+  <p><a name="error1" style="color:black;text-decoration:none;"><b>Non-Standard Nucleotides Error</b></a></p>
+  <p>This error occurs when the web server detects a character which doesn't match one of the standard IUPAC 1-letter DNA codes - 'A', 'C', 'G', or 'T' (lowercase letters are allowed.) We don't allow ambiguous codes because MEDJED looks for microhomologies near the double-strand break (DSB) site, and ambiguous codes do not allow for exact determination of these sites.</p>
+  <p>Common sources of this error include:</p>
+  <ul>
+    <li>Using a sequence which has 'X' characters</li>
+    <li>Using an RNA sequence instead of a DNA sequence ('U' is not an allowed character)</li>
+    <li>Ambiguous nucleotides in the sequence (e.g., 'V' ('A', 'C', or 'G'), 'R' ('A' or 'G'), 'Y' ('C' or 'T'), etc.)</li>
+    <li>Including "white space" characters in the input sequence - i.e., new lines/carriage returns, spaces, or tabs</li>
+  </ul>
+  <p>To correct this error, check your sequence to ensure that it only contains 'A', 'C', 'G', and 'T', and check to make sure there are no spaces, linebreaks, or tabs.</p>
+  <br />
+  
+    <p><a name="error2" style="color:black;text-decoration:none;"><b>Even Number of Nucleotides Error</b></a></p>
+  <p>This error occurs when the web server detects that there are an odd number of nucleotides in the input DNA sequence. MEDJED requires an even number of nucleotides in the input sequence, because it assumes that the DNA DSB will occur in the exact middle of the sequence - i.e., between two nucleotides, which requires an even number of nucleotides.</p>
+  <p>To correct this error, add or remove a single nucleotide from the end of the sequence; be sure to add/remove a nucleotide such that your DSB is in the middle of the sequence.</p>
+  <br />
+  
+      <p><a name="error3" style="color:black;text-decoration:none;"><b>200 or Fewer Nucleotides Error</b></a></p>
+  <p>This error occurs when the web server detects more than 200 nucleotides in the input sequence. This limitation is in place for three reasons:</p>
+  <ol>
+    <li>To prevent overloading our server. The off-line version of MENTHU does not impose this limitation, although it can take several minutes to generate predictions for longer sequences (e.g., 1000s of base pairs)</li>
+    <li>MEDJED has not been validated for extremely long sequences; you use long sequences at your own risk</li>
+    <li>MMEJ appears to largely favor short-range deletions (<a href="https://www.nature.com/articles/nmeth.3015">Bae et al. Nat Methods 2014</a>, <a href="https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007652">Ata et al. PLoS Genet 2018</a></li>
+  </ol>
+  <p>To correct this error, remove nucleotides from both ends of your sequence until you have no more than 200 nucleotides; be sure to remove nucleotides such that your DSB is still in the middle of the sequence.</p>
+  <br />
+  
+      <p><a name="error4" style="color:black;text-decoration:none;"><b>Not Enough Sequence Context Error</b></a></p>
+  <p>This error occurs when the web server detects that the input sequence is less than 20 nucleotides long. MEDJED requires sequence context surrounding the DSB site in order to identify microhomologies upstream and downstream of the DSB site, and fewer than 20 nucleotides does not provide enough context. We recommend using at least 50 nucleotides (25 nts upstream, and 25 nts downstream of the DSB site.)</p>
+  <p>To correct this error, add nucleotides to your sequence until there are at least 20 nucleotides. Be sure to add nucleotides such that your DSB is still in the middle of the sequence. </p>
+  <br />
+          
+          
+  </body>
+</html>
