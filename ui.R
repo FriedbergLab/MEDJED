@@ -6,6 +6,7 @@
 #
 
 library(shiny)
+library(DT)
 
 shinyUI(
   
@@ -21,12 +22,12 @@ shinyUI(
     tags$div(""),
     
     ########ABOUT TAB#################################################
-    tabPanel(tags$div("MEDJED v1.1.4"),
+    tabPanel(tags$div("MEDJED v1.2.0"),
              titlePanel(""),
              
              #Sidebar panel with links
              column(2, wellPanel(
-               tags$div(tags$span(a(href   = "http://ll-g2f.gdcb.iastate.edu/gss/", 
+               tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                                     target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
                tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -50,6 +51,39 @@ shinyUI(
                
                #Display page instructions
                includeHTML("www/about.html")
+             ))
+    ),
+    
+    tabPanel(id = "instructions",
+             tags$div("Instructions and FAQs"),
+             titlePanel(""),
+             
+             #Sidebar panel with links
+             column(2, wellPanel(
+               tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
+                                    target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
+                                    target = "_blank", tags$img(src = "isu-logo-alt.png",                  width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://www.mayoclinic.org", 
+                                    target = "_blank", tags$img(src = "MC_stack_4c_DAC.png",               width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
+                                    target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+                                    target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+                                    target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
+             )),
+             
+             #Text area in center of page
+             column(9, wellPanel(
+               
+               #Display page instructions
+               includeHTML("www/medjed_instructions.html")
              ))
     ),
     
@@ -111,13 +145,97 @@ shinyUI(
                
                #Submit button
                actionButton("submit", label = "Submit"),
-               tags$br(),
-               tags$br(),
-               p("Your target sequence: "),
-               uiOutput("targetSequence"),
-               tags$br(),
-               textOutput("predictionPercentage")
+               uiOutput("downloadAllOutput", label = "Download All Output"),
+               
+               
+               conditionalPanel(
+                 condition = "output.showOutput",
+                 
+                 tags$br(),
+                 tags$p("See \"Instructions and FAQs\" for explanation of the MEDJED outputs."),
+                 uiOutput("downloadAll"),
+                 tags$br(),
+                 tags$br(),
+                 
+                 # Prediction output
+                 
+                 tags$b("MEDJED Prediction: "),
+                 tags$p(uiOutput("downloadPrediction")),
+                 #uiOutput("targetSequence"),
+                 tags$span(tags$b(tags$p(textOutput("predictionPercentage"))), style="color:blue;"),
+                 tags$br(),
+                 tags$br(),
+                 
+                 # Predictor values
+                 tags$b("Table of MEDJED Predictor Values: "),
+                 tags$p(uiOutput("downloadPredictorTable")),
+                 tags$p(),
+                 div(DT::dataTableOutput("predictors")),
+                 tags$br(),
+                 tags$br(),
+                 
+                 # Deletion pattern table
+                 tags$b("Table of Microhomology Deletion Patterns:"),
+                 tags$p(uiOutput("downloadDelTable")),
+                 tags$br(),
+                 div(DT::dataTableOutput("deletionTable"), style = "font-family: Courier, courier;")
+               )
              ))
+    ),
+    
+    tabPanel(id = "downloads",
+             tags$div("Download"),
+             titlePanel(""),
+             
+             #Sidebar panel with links
+             column(2, wellPanel(
+               #Sidebar panel with links
+               tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
+                                    target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
+                                    target = "_blank", tags$img(src = "isu-logo-alt.png",                  width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://www.mayoclinic.org", 
+                                    target = "_blank", tags$img(src = "MC_stack_4c_DAC.png",               width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
+                                    target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+                                    target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
+               tags$br(),
+               tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+                                    target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
+             )),
+             
+             column(9, wellPanel(
+               h3("Download MEDJED"),
+               tags$p(HTML(paste0("A standalone version of this code can be downloaded from our ", 
+                                  tags$a(href = "https://github.com/Dobbs-Lab/MEDJED", target = "_blank", "GitHub repository"),
+                                  "."))),
+               tags$p(HTML(paste0("There are extensive installation/usage instructions available in the GitHub ", 
+                                  tags$a(href = "https://github.com/Dobbs-Lab/MEDJED#how-to-run-MEDJED-locally", target = "_blank", "README"), 
+                                  " file."))),
+               tags$p("You can clone the repository with the following git command:"),
+               tags$p(tags$code("git clone https://github.com/Dobbs-Lab/MEDJED.git"), style = "text-align:center;"),
+               tags$p(HTML(paste0("MEDJED is available under the GNU General Public License v3 (GPL 3.0). You can read the license ",
+                                  tags$a(href = "https://github.com/Dobbs-Lab/MEDJED/blob/master/LICENSE", target = "_blank", "here"),
+                                  "."))),
+               tags$p(HTML(paste0("The MEDJED R code is provided as-is; please be aware that you modify the code at your own risk. ",
+                                  "We are unable to provide technical support for modified versions.")))
+             ),
+             
+             wellPanel(
+               h3("Run MEDJED Locally"),
+               tags$p(HTML(paste0("If you have R installed on your system, you can also follow the instructions ",
+                                  tags$a(href = "https://github.com/Dobbs-Lab/MEDJED#3-run-MEDJED-locally", target = "_blank", "here"),
+                                  " to easily run the MEDJED RShiny app from R, without dealing with Git."))),
+               p("MEDJED is also available as a Docker container image. You can clone the Docker image using the following command:"),
+               tags$p(tags$code("sudo docker pull cmmann/MEDJED"), style = "text-align:center;")
+               
+             ))
+             
     ),
     
     ##########FUNDING Tab#############################################
@@ -128,7 +246,7 @@ shinyUI(
       #Sidebar panel with links
       column(2, wellPanel(
         #Sidebar panel with links
-        tags$div(tags$span(a(href   = "http://ll-g2f.gdcb.iastate.edu/gss/", 
+        tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                              target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
         tags$br(),
         tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -164,7 +282,7 @@ shinyUI(
              
              #Sidebar panel with links
              column(2, wellPanel(
-               tags$div(tags$span(a(href   = "http://ll-g2f.gdcb.iastate.edu/gss/", 
+               tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                                     target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
                tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -195,7 +313,7 @@ shinyUI(
              
              #Sidebar panel with links
              column(2, wellPanel(
-               tags$div(tags$span(a(href   = "http://ll-g2f.gdcb.iastate.edu/gss/", 
+               tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                                     target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
                tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -238,7 +356,7 @@ shinyUI(
       
       #Sidebar panel with links
       column(2, wellPanel(
-        tags$div(tags$span(a(href   = "http://ll-g2f.gdcb.iastate.edu/gss/", 
+        tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                              target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
         tags$br(),
         tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
