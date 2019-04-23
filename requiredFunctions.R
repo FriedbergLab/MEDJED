@@ -271,3 +271,10 @@ generateFeatureVector <- function(uFrame){
                             stringsAsFactors = FALSE)
   return(unique(returnFrame))
 }
+
+
+# Function to clean input strings of all newline characters
+stripNewLines <- function(inputString){
+  fixed <- gsub("\n|\r", "", inputString)
+  return(fixed)
+}
