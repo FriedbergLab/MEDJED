@@ -9,7 +9,6 @@
     <p>For information on the NIH R24 grant which supported the development of this tool, see "<b>Funding</b>."</p>
     <p>For information on citing MEDJED in your research, see "<b>How to Cite</b>."</p>
     <p>If you experience bugs, wish to request features, or need other help, please fill out the form at "<b>Report Bugs or Contact Us</b>."</p>
-    <br />
     
     <h3>How to Use MEDJED</h3>
     <p>MEDJED takes a DNA sequence as input, assumes a double-strand break (DSB) in the exact middle of the sequence, and then predicts the proportion of deletions which will match a microhomology-mediated end joining (MMEJ) outcome.</p>
@@ -56,18 +55,10 @@
       <!-- FAQs ######################################################################################################################### -->
        <br /> 
       <h3 style = "display:inline-block">Frequently Asked Questions (FAQs)  </h3><a href="#FAQs" data-toggle = "collapse"> expand/collapse </a>
-<div id = "FAQs" class = "collapse in">
-  </div>  
+      <div id = "FAQs" class = "collapse in">
   <p><b>How do I correct the error message I received?</b></p>
   <p></p>
-  <ol>
-    <li><a href="#error1">Error: Input target sequence contains non-standard nucleotides. Allowed nucleotides are A, C, G, and T.</a></li>
-    <li><a href="#error2">Error: There are x nucleotides in the pasted sequence. There must be an even number of nucleotides in the input sequence.</a></li>
-    <li><a href="#error3">Error: Please input 200 or fewer nucleotides of context. We recommende 50-80 bp.</a></li>
-    <li><a href="#error4">Error: Not enough sequence context to perform calculations. Please input at least 20 nucleotides.</a></li>
-  </ol>
-  
-  <p><a name="error1" style="color:black;text-decoration:none;"><b>Non-Standard Nucleotides Error</b></a></p>
+  <p><a name="error1" style="color:black;text-decoration:none;"><b>Error: Input target sequence contains non-standard nucleotides. Allowed nucleotides are A, C, G, and T.</b></a></p>
   <p>This error occurs when the web server detects a character which doesn't match one of the standard IUPAC 1-letter DNA codes - 'A', 'C', 'G', or 'T' (lowercase letters are allowed.) We don't allow ambiguous codes because MEDJED looks for microhomologies near the double-strand break (DSB) site, and ambiguous codes do not allow for exact determination of these sites.</p>
   <p>Common sources of this error include:</p>
   <ul>
@@ -79,12 +70,12 @@
   <p>To correct this error, check your sequence to ensure that it only contains 'A', 'C', 'G', and 'T', and check to make sure there are no spaces, linebreaks, or tabs.</p>
   <br />
   
-    <p><a name="error2" style="color:black;text-decoration:none;"><b>Even Number of Nucleotides Error</b></a></p>
+    <p><a name="error2" style="color:black;text-decoration:none;"><b>Error: There are x nucleotides in the pasted sequence. There must be an even number of nucleotides in the input sequence.</b></a></p>
   <p>This error occurs when the web server detects that there are an odd number of nucleotides in the input DNA sequence. MEDJED requires an even number of nucleotides in the input sequence, because it assumes that the DNA DSB will occur in the exact middle of the sequence - i.e., between two nucleotides, which requires an even number of nucleotides.</p>
   <p>To correct this error, add or remove a single nucleotide from the end of the sequence; be sure to add/remove a nucleotide such that your DSB is in the middle of the sequence.</p>
   <br />
   
-      <p><a name="error3" style="color:black;text-decoration:none;"><b>200 or Fewer Nucleotides Error</b></a></p>
+      <p><a name="error3" style="color:black;text-decoration:none;"><b>Error: Please input 200 or fewer nucleotides of context. We recommende 50-80 bp.</b></a></p>
   <p>This error occurs when the web server detects more than 200 nucleotides in the input sequence. This limitation is in place for three reasons:</p>
   <ol>
     <li>To prevent overloading our server. The off-line version of MENTHU does not impose this limitation, although it can take several minutes to generate predictions for longer sequences (e.g., 1000s of base pairs)</li>
@@ -94,11 +85,11 @@
   <p>To correct this error, remove nucleotides from both ends of your sequence until you have no more than 200 nucleotides; be sure to remove nucleotides such that your DSB is still in the middle of the sequence.</p>
   <br />
   
-      <p><a name="error4" style="color:black;text-decoration:none;"><b>Not Enough Sequence Context Error</b></a></p>
+      <p><a name="error4" style="color:black;text-decoration:none;"><b>Error: Not enough sequence context to perform calculations. Please input at least 20 nucleotides.</b></a></p>
   <p>This error occurs when the web server detects that the input sequence is less than 20 nucleotides long. MEDJED requires sequence context surrounding the DSB site in order to identify microhomologies upstream and downstream of the DSB site, and fewer than 20 nucleotides does not provide enough context. We recommend using at least 50 nucleotides (25 nts upstream, and 25 nts downstream of the DSB site.)</p>
   <p>To correct this error, add nucleotides to your sequence until there are at least 20 nucleotides. Be sure to add nucleotides such that your DSB is still in the middle of the sequence. </p>
   <br />
           
-          
+  </div>  
   </body>
 </html>
