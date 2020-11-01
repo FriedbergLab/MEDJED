@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     
 # install package dependencies for MEDJED
 # RUN R -e "install.packages(c('shiny', 'stringr', 'randomForest', 'ggplot2', 'DT'), repos='https://cloud.r-project.org/')" -e 'BiocManager::install("Biostrings")'
-RUN R -e "install.packages(c('shiny', 'stringr', 'randomForest', 'ggplot2', 'DT'), repos='https://cloud.r-project.org/')" -e 'BiocManager::install("Biostrings")' -e 'devtools::install_github("rstudio/shiny-incubator")'
+RUN R -e "install.packages(c('shiny', 'stringr', 'randomForest', 'ggplot2', 'DT'), repos='https://cloud.r-project.org/')"
 
 # Copy MEDJED to image
 RUN mkdir /root/medjed/
