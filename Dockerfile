@@ -12,8 +12,9 @@ RUN apt-get update && apt-get install -y \
     libxt-dev \
     libssl-dev \
     libssh2-1-dev \
-    libssl1.0.0
-
+    libssl1.0.0 \
+    libxml2-dev
+    
 # install package dependencies for MEDJED
 RUN R -e "install.packages(c('shiny', 'stringr', 'randomForest', 'ggplot2', 'DT'), repos='https://cloud.r-project.org/')" -e 'BiocManager::install("Biostrings")'
 
