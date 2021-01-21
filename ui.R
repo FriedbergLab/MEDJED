@@ -27,7 +27,7 @@ shinyUI(
              
              #Sidebar panel with links
              column(2, wellPanel(
-               tags$div(tags$span(a(href   = "http://www.genesculpt.org/", 
+               tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                                     target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
                tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -60,7 +60,7 @@ shinyUI(
              
              #Sidebar panel with links
              column(2, wellPanel(
-               tags$div(tags$span(a(href   = "http://www.genesculpt.org/", 
+               tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                                     target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
                tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -190,7 +190,7 @@ shinyUI(
              #Sidebar panel with links
              column(2, wellPanel(
                #Sidebar panel with links
-               tags$div(tags$span(a(href   = "http://www.genesculpt.org/", 
+               tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                                     target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
                tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -246,7 +246,7 @@ shinyUI(
       #Sidebar panel with links
       column(2, wellPanel(
         #Sidebar panel with links
-        tags$div(tags$span(a(href   = "http://www.genesculpt.org/", 
+        tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                              target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
         tags$br(),
         tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -282,7 +282,7 @@ shinyUI(
              
              #Sidebar panel with links
              column(2, wellPanel(
-               tags$div(tags$span(a(href   = "http://www.genesculpt.org/", 
+               tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                                     target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
                tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -313,7 +313,7 @@ shinyUI(
              
              #Sidebar panel with links
              column(2, wellPanel(
-               tags$div(tags$span(a(href   = "http://www.genesculpt.org/", 
+               tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                                     target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
                tags$br(),
                tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
@@ -356,7 +356,7 @@ shinyUI(
       
       #Sidebar panel with links
       column(2, wellPanel(
-        tags$div(tags$span(a(href   = "http://www.genesculpt.org/", 
+        tags$div(tags$span(a(href   = "http://www.genesculpt.org", 
                              target = "_blank", tags$img(src = "GSS logo small.png",                width = "100%")))),
         tags$br(),
         tags$div(tags$span(a(href   = "https://www.iastate.edu/",   
