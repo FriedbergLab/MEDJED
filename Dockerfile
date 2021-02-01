@@ -11,11 +11,12 @@ RUN apt-get update && apt-get install -y \
     libcairo2-dev \
     libxt-dev \
     libssl-dev \
-    libssh2-1-dev \
-    libssl1.0.0
-
+    libssh2-1-dev 
+    #libssl1.0.0
+    
 # install package dependencies for MEDJED
-RUN R -e "install.packages(c('shiny', 'stringr', 'randomForest', 'ggplot2', 'DT'), repos='https://cloud.r-project.org/')" -e 'source("http://bioconductor.org/biocLite.R")' -e 'biocLite("Biostrings")'
+# RUN R -e "install.packages(c('shiny', 'stringr', 'randomForest', 'ggplot2', 'DT'), repos='https://cloud.r-project.org/')" -e 'BiocManager::install("Biostrings")'
+RUN R -e "install.packages(c('shiny', 'stringr', 'randomForest', 'ggplot2', 'DT', 'plyr', 'BiocManager'), repos='http://cran.r-project.org/')" -e 'BiocManager::install("Biostrings")'
 
 # Copy MEDJED to image
 RUN mkdir /root/medjed/

@@ -39,10 +39,10 @@ shinyUI(
                tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
                                     target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+               tags$div(tags$span(a(href   = "https://github.com/FriedbergLab/MEDJED",
                                     target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+               tags$div(tags$span(a(href   = "https://hub.docker.com/r/parnaljoshi/medjed", 
                                     target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
              )),
              
@@ -72,10 +72,10 @@ shinyUI(
                tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
                                     target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+               tags$div(tags$span(a(href   = "https://github.com/FriedbergLab/MEDJED",
                                     target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+               tags$div(tags$span(a(href   = "https://hub.docker.com/r/parnaljoshi/medjed", 
                                     target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
              )),
              
@@ -202,25 +202,25 @@ shinyUI(
                tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
                                     target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+               tags$div(tags$span(a(href   = "https://github.com/FriedbergLab/MEDJED",
                                     target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+               tags$div(tags$span(a(href   = "https://hub.docker.com/r/parnaljoshi/medjed", 
                                     target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
              )),
              
              column(9, wellPanel(
                h3("Download MEDJED"),
                tags$p(HTML(paste0("A standalone version of this code can be downloaded from our ", 
-                                  tags$a(href = "https://github.com/Dobbs-Lab/MEDJED", target = "_blank", "GitHub repository"),
+                                  tags$a(href = "https://github.com/FriedbergLab/MEDJED", target = "_blank", "GitHub repository"),
                                   "."))),
                tags$p(HTML(paste0("There are extensive installation/usage instructions available in the GitHub ", 
-                                  tags$a(href = "https://github.com/Dobbs-Lab/MEDJED#how-to-run-MEDJED-locally", target = "_blank", "README"), 
+                                  tags$a(href = "https://github.com/FriedbergLab/MEDJED#how-to-run-MEDJED-locally", target = "_blank", "README"), 
                                   " file."))),
                tags$p("You can clone the repository with the following git command:"),
-               tags$p(tags$code("git clone https://github.com/Dobbs-Lab/MEDJED.git"), style = "text-align:center;"),
+               tags$p(tags$code("git clone https://github.com/FriedbergLab/MEDJED.git"), style = "text-align:center;"),
                tags$p(HTML(paste0("MEDJED is available under the GNU General Public License v3 (GPL 3.0). You can read the license ",
-                                  tags$a(href = "https://github.com/Dobbs-Lab/MEDJED/blob/master/LICENSE", target = "_blank", "here"),
+                                  tags$a(href = "https://github.com/FriedbergLab/MEDJED/blob/master/LICENSE", target = "_blank", "here"),
                                   "."))),
                tags$p(HTML(paste0("The MEDJED R code is provided as-is; please be aware that you modify the code at your own risk. ",
                                   "We are unable to provide technical support for modified versions.")))
@@ -229,10 +229,10 @@ shinyUI(
              wellPanel(
                h3("Run MEDJED Locally"),
                tags$p(HTML(paste0("If you have R installed on your system, you can also follow the instructions ",
-                                  tags$a(href = "https://github.com/Dobbs-Lab/MEDJED#3-run-MEDJED-locally", target = "_blank", "here"),
+                                  tags$a(href = "https://github.com/FriedbergLab/MEDJED#3-run-MEDJED-locally", target = "_blank", "here"),
                                   " to easily run the MEDJED RShiny app from R, without dealing with Git."))),
                p("MEDJED is also available as a Docker container image. You can clone the Docker image using the following command:"),
-               tags$p(tags$code("sudo docker pull cmmann/medjed"), style = "text-align:center;")
+               tags$p(tags$code("sudo docker pull parnaljoshi/medjed"), style = "text-align:center;")
                
              ))
              
@@ -258,10 +258,10 @@ shinyUI(
         tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
                              target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
         tags$br(),
-        tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+        tags$div(tags$span(a(href   = "https://github.com/FriedbergLab/MEDJED",
                              target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
         tags$br(),
-        tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+        tags$div(tags$span(a(href   = "https://hub.docker.com/r/parnaljoshi/medjed", 
                              target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%")))),
         tags$br(),
         tags$div(tags$span(a(href = "https://www.nih.gov/", 
@@ -294,10 +294,10 @@ shinyUI(
                tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
                                     target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+               tags$div(tags$span(a(href   = "https://github.com/FriedbergLab/MEDJED",
                                     target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+               tags$div(tags$span(a(href   = "https://hub.docker.com/r/parnaljoshi/medjed", 
                                     target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
              )),
              
@@ -325,10 +325,10 @@ shinyUI(
                tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
                                     target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+               tags$div(tags$span(a(href   = "https://github.com/FriedbergLab/MEDJED",
                                     target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
                tags$br(),
-               tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+               tags$div(tags$span(a(href   = "https://hub.docker.com/r/parnaljoshi/medjed", 
                                     target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
              )),
              
@@ -368,10 +368,10 @@ shinyUI(
         tags$div(tags$span(a(href   = "https://www.genomewritersguild.org/", 
                              target = "_blank", tags$img(src = "genome-writers-guild-logo_DAC.png", width = "100%")))),
         tags$br(),
-        tags$div(tags$span(a(href   = "https://github.com/Dobbs-Lab/MEDJED",
+        tags$div(tags$span(a(href   = "https://github.com/FriedbergLab/MEDJED",
                              target = "_blank", tags$img(src = "GitHub_Logo.png",                   width = "100%")))),
         tags$br(),
-        tags$div(tags$span(a(href   = "https://hub.docker.com/r/cmmann/medjed", 
+        tags$div(tags$span(a(href   = "https://hub.docker.com/r/parnaljoshi/medjed", 
                              target = "_blank", tags$img(src = "Docker_Logo.png",                   width = "100%"))))
       )),
       
